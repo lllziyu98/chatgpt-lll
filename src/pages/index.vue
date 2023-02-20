@@ -118,7 +118,7 @@ export default {
         self.loading = false
         self.$message({
           message: '服务器挂了。。。。。',
-          type: 'danger'
+          type: 'error'
         })
       })
     }

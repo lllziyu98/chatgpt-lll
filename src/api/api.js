@@ -8,13 +8,13 @@ export default {
   // ------------Other------------
   // ------------------------------
   dealResponse (response, callback, errorCallback) {
-    if (response.status === 200) {
+    if (response && response.status === 200) {
       if (callback && typeof callback === 'function') {
         callback(response.data)
       }
     } else {
       if (errorCallback && typeof errorCallback === 'function') {
-        errorCallback(response.data.code)
+        errorCallback()
       }
     }
   }

@@ -8,6 +8,8 @@ export default {
       headers: {'Content-Type': 'application/json'}
     }).then(function (response) {
       self.dealResponse(response, callback, errorCallback)
+    }).catch(() => {
+      self.dealResponse(null, callback, errorCallback)
     })
   }
 }
