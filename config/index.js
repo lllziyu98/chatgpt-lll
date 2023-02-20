@@ -10,11 +10,11 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/v1/rest': {
-        target: 'https://core-office.heweather.cn',
+      '/chat': {
+        target: 'http://192.9.224.130:9939',
         changeOrigin: true, // 是否跨域
         pathRewrite: { // 重定向地址
-          '^/v1/rest': '/v1/rest'
+          '^/chat': '/chat'
         }
       }
     },
