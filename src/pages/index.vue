@@ -87,9 +87,10 @@ export default {
       console.log('sendQuestion', this.question)
       let self = this
       let params = {
-        text_value: self.question,
+        message: self.question,
         conversationId: self.conversationId,
-        messageId: self.messageId
+        parentMessageId: self.messageId,
+        stream: false
       }
       if (self.replyObj === null) {
         self.replyObj = {
