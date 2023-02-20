@@ -6,15 +6,14 @@ const path = require('path')
 
 module.exports = {
   dev: {
-    // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
       '/chat': {
-        target: 'http://192.9.224.130:9939',
-        changeOrigin: true, // 是否跨域
-        pathRewrite: { // 重定向地址
-          '^/chat': '/chat'
+        target: 'http://192.9.224.130:9939',  //目标接口域名
+        changeOrigin: true,  //是否跨域
+        pathRewrite: {
+          '^/chat': '/chat'   //重写接口
         }
       }
     },
@@ -57,7 +56,7 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsPublicPath: './',
 
     /**
      * Source Maps

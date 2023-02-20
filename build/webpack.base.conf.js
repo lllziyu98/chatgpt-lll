@@ -4,7 +4,7 @@ const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
 
-function resolve (dir) {
+function resolve(dir) {
   return path.join(__dirname, '..', dir)
 }
 
@@ -31,6 +31,7 @@ module.exports = {
       ? config.build.assetsPublicPath
       : config.dev.assetsPublicPath
   },
+  externals: {},
   resolve: {
     extensions: ['.js', '.vue', '.json'],
     alias: {
@@ -38,15 +39,9 @@ module.exports = {
       '@': resolve('src'),
     }
   },
-  // externals: {
-  //   echarts: 'echarts',
-  //   vue: 'Vue',
-  //   vuex: 'Vuex',
-  //   'element-ui': 'ELEMENT'
-  // },
   module: {
     rules: [
-      // ...(config.dev.useEslint ? [createLintingRule()] : []),
+      ...(config.dev.useEslint ? [createLintingRule()] : []),
       {
         test: /\.vue$/,
         loader: 'vue-loader',
@@ -80,6 +75,10 @@ module.exports = {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
+      },
+      {
+        test: /\.sass$/,
+        loaders: ['style', 'css', 'scss']
       }
     ]
   },

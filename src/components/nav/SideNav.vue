@@ -67,13 +67,14 @@ export default {
   },
   methods: {
     getQuestionList () {
-      this.questionList = [{
-        id: 1,
-        question: '机器人学习时间'
-      }, {
-        id: 2,
-        question: 'newChat'
-      }]
+      this.questionList = []
+      // this.questionList = [{
+      //   id: 1,
+      //   question: '机器人学习时间'
+      // }, {
+      //   id: 2,
+      //   question: 'newChat'
+      // }]
     },
     selectQuestion (k) {
       this.index = k
@@ -81,9 +82,9 @@ export default {
       this.$store.commit('setQuestionId', this.questionList[k].id)
     },
     addQuestion () {
-      this.questionList.push({
-        question: 'newChat'
-      })
+      // this.questionList.push({
+      //   question: 'newChat'
+      // })
     },
     editQuestion (k, question) {
       this.nameIndex = k

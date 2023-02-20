@@ -8,9 +8,9 @@ export default {
   // ------------Other------------
   // ------------------------------
   dealResponse (response, callback, errorCallback) {
-    if (response.data.success === true) {
+    if (response.status === 200) {
       if (callback && typeof callback === 'function') {
-        callback(response.data.data, response.data.code, response.data.page)
+        callback(response.data)
       }
     } else {
       if (errorCallback && typeof errorCallback === 'function') {
