@@ -14,7 +14,7 @@
                 </svg>
               </div>
               <div class="reply-txt-bg">
-                <p>{{ v.text }}</p>
+                <p v-html="v.text"></p>
               </div>
             </div>
           </div>
