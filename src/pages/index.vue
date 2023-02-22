@@ -51,79 +51,96 @@
 </template>
 
 <script>
-import Utils from '@/util/utils'
-import Api from '@/api/api'
+  import Utils from '@/util/utils'
+  import Api from '@/api/api'
 
-export default {
-  name: 'index',
-  data () {
-    return {
-      loading: false,
-      question: '',
-      replyObj: null,
-      conversationId: '',
-      messageId: ''
-    }
-  },
-  watch: {
-    '$store.state.questionId' () {
-      // console.log(11111)
-      // this.getReply()
-    }
-  },
-  beforeMount () {
-    this.utils = Utils
-    // this.getReply()
-  },
-  methods: {
-    getReply () {
-      this.replyObj = {
-        id: 1,
-        title: '测试提问',
-        replyList: []
+  export default {
+    name: 'index',
+    data () {
+      return {
+        loading: false,
+        question: '',
+        replyObj: null,
+        conversationId: '',
+        messageId: '',
+        currentIndex: 0
       }
     },
-    sendQuestion () {
-      console.log('sendQuestion', this.question)
-      let self = this
-      let params = {
-        message: self.question,
-        conversationId: self.conversationId,
-        parentMessageId: self.messageId,
-        stream: false
+    watch: {
+      '$store.state.questionId' () {
+        // console.log(11111)
+        // this.getReply()
       }
-      if (self.replyObj === null) {
-        self.replyObj = {
+    },
+    beforeMount () {
+      this.utils = Utils
+    // this.getReply()
+    },
+    methods: {
+      getReply () {
+        this.replyObj = {
           id: 1,
           title: '测试提问',
           replyList: []
         }
-      }
-      self.replyObj.replyList.push({
-        role: 1,
-        text: self.question
-      })
-      this.loading = true
-      this.question = ''
-      Api.sendQuestions(params, (data) => {
-        self.loading = false
-        console.log('sendQuestion', data)
-        self.conversationId = data.conversationId
-        self.messageId = data.messageId
+        this.currentIndex = this.replyObj.replyList.length
+      },
+      sendQuestion () {
+        console.log('sendQuestion', this.question)
+        let self = this
+        let params = {
+          message: self.question,
+          conversationId: self.conversationId,
+          parentMessageId: self.messageId,
+          stream: true
+        }
+        if (self.replyObj === null) {
+          self.replyObj = {
+            id: 1,
+            title: '测试提问',
+            replyList: []
+          }
+        }
         self.replyObj.replyList.push({
-          role: 2,
-          text: data.response
+          role: 1,
+          text: self.question
         })
-      }, () => {
-        self.loading = false
-        self.$message({
-          message: '服务器挂了。。。。。',
-          type: 'error'
+        this.currentIndex++
+        this.loading = true
+        this.question = ''
+        Api.sendSocketQuestions(params, (data) => {
+          self.loading = false
+          // console.log('sendSocketQuestions', data)
+          if (data.type === 'result') {
+            self.conversationId = data.data.conversationId
+            self.messageId = data.data.messageId
+          }
+          if (data.type === 'text') {
+            if (data.data === '[DONE]') {
+              self.currentIndex++
+            } else {
+              if (!self.replyObj.replyList[self.currentIndex]) {
+                self.replyObj.replyList.push({
+                  role: 2,
+                  text: data.data
+                })
+              } else {
+                let obj = self.replyObj.replyList[self.currentIndex]
+                obj.text += data.data
+                self.replyObj.replyList.splice(self.currentIndex, 1, obj)
+              }
+            }
+          }
+        }, () => {
+          self.loading = false
+          self.$message({
+            message: '服务器挂了。。。。。',
+            type: 'error'
+          })
         })
-      })
+      }
     }
   }
-}
 </script>
 
 <style lang="scss" scoped>
