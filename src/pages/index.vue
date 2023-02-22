@@ -134,7 +134,7 @@
         }, () => {
           self.loading = false
           self.$message({
-            message: '服务器挂了。。。。。',
+            message: '访问人数过多 请稍后重试',
             type: 'error'
           })
         })
