@@ -7,7 +7,7 @@
           <el-input v-model.trim="entity.user" placeholder="请输入用户名"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="psd">
-          <el-input v-model.trim="entity.psd" placeholder="请输入密码"></el-input>
+          <el-input type="password" v-model.trim="entity.psd" placeholder="请输入密码"></el-input>
         </el-form-item>
       </el-form>
       <div class="login-btn">
@@ -21,65 +21,82 @@
 </template>
 
 <script>
-export default {
-  name: "login",
-  data () {
-    let checkUser = (rule, value, callback) => {
-      if (this.entity.user === '') {
-        callback(new Error('请输入用户名'))
-      } else if (!(/^[a-zA-Z0-9\s]+$/.test(this.entity.user))) {
-        callback(new Error('用户名格式不正确'))
-      } else if (this.entity.user.length < 3 || this.entity.user.length > 16) {
-        callback(new Error('用户名格式不正确，长度位3-16位'))
-      } else {
-        callback()
-      }
-    }
+  import Api from '@/api/api'
 
-    let checkPsd = (rule, value, callback) => {
-      if (this.entity.user === '') {
-        callback(new Error('请输入密码'))
-      } else if (!(/^[a-zA-Z0-9\s]+$/.test(this.entity.user))) {
-        callback(new Error('密码格式不正确'))
-      } else if (this.entity.user.length < 3 || this.entity.user.length > 9) {
-        callback(new Error('密码格式不正确，长度位3-9位'))
-      } else {
-        callback()
-      }
-    }
-
-    return {
-      loading: false,
-      entity: {
-        user: '',
-        psd: ''
-      },
-      rules: {
-        user: [
-          {required: true, validator: checkUser, trigger: 'blur'}
-        ],
-        psd: [
-          {required: true, validator: checkPsd, trigger: 'blur'}
-        ]
-      }
-    }
-  },
-  beforeMount () {
-  },
-  methods: {
-    goLogin () {
-      let self = this
-      this.$refs['login-form'].validate((valid) => {
-        if (valid) {
-          self.loading = true
-          // let formData = new FormData()
-          // formData.append('email', self.entity.email)
-          console.log()
+  export default {
+    name: 'login',
+    data () {
+      let checkUser = (rule, value, callback) => {
+        if (this.entity.user === '') {
+          callback(new Error('请输入用户名'))
+        } else if (!(/^[a-zA-Z0-9\s]+$/.test(this.entity.user))) {
+          callback(new Error('用户名格式不正确'))
+        } else if (this.entity.user.length < 3 || this.entity.user.length > 16) {
+          callback(new Error('用户名格式不正确，长度位3-16位'))
+        } else {
+          callback()
         }
-      })
+      }
+
+      let checkPsd = (rule, value, callback) => {
+        if (this.entity.psd === '') {
+          callback(new Error('请输入密码'))
+        } else if (!(/^[a-zA-Z0-9\s]+$/.test(this.entity.psd))) {
+          callback(new Error('密码格式不正确'))
+        } else if (this.entity.psd.length < 3 || this.entity.psd.length > 9) {
+          callback(new Error('密码格式不正确，长度位3-9位'))
+        } else {
+          callback()
+        }
+      }
+
+      return {
+        loading: false,
+        entity: {
+          user: '',
+          psd: ''
+        },
+        rules: {
+          user: [
+            {required: true, validator: checkUser, trigger: 'blur'}
+          ],
+          psd: [
+            {required: true, validator: checkPsd, trigger: 'blur'}
+          ]
+        }
+      }
+    },
+    beforeMount () {
+    },
+    methods: {
+      goLogin () {
+        let self = this
+        this.$refs['login-form'].validate((valid) => {
+          if (valid) {
+            self.loading = true
+            let params = {
+              username: self.entity.user,
+              password: self.entity.psd
+            }
+            Api.login(params, (data) => {
+              self.loading = false
+              self.$message({
+                message: '登录成功',
+                type: 'success'
+              })
+              self.$router.push('/index')
+            }, () => {
+              self.loading = false
+              self.$message({
+                message: '用户名或密码错误',
+                type: 'error'
+              })
+            })
+          }
+        })
+      }
     }
   }
-}
 </script>
 
 <style lang="scss" scoped>

@@ -35,12 +35,21 @@ export default {
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).then(function (response) {
       self.dealResponse(response, callback, errorCallback)
-    }).catch((data) => {
+    }).catch(() => {
       self.dealResponse(null, callback, errorCallback)
     })
   },
-  doLogin () {
-    // 登录接口
+  login (params, callback, errorCallback) {
+    let self = this
+    axios.post(`${process.env.CUSTOM_CONFIG.API_BASE_URL}/login`, Qs.stringify(params), {
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+    }).then(function (response) {
+      console.log('response', response)
+      console.log('Set-Cookie', response.headers['set-cookie'], response.headers.cookie)
+      self.dealResponse(response, callback, errorCallback)
+    }).catch(() => {
+      self.dealResponse(null, callback, errorCallback)
+    })
   },
   doLogout (url) {
     sessionStorage.removeItem('login-token')
