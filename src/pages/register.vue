@@ -7,13 +7,19 @@
           <el-input v-model.trim="entity.user" placeholder="请输入用户名"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="psd">
-          <el-input v-model.trim="entity.psd" placeholder="请输入密码"></el-input>
+          <el-input type="password" v-model.trim="entity.psd" placeholder="请输入密码"></el-input>
+        </el-form-item>
+        <el-form-item label="确认密码" prop="psd2">
+          <el-input type="password" v-model.trim="entity.psd2" placeholder="确认密码"></el-input>
+        </el-form-item>
+        <el-form-item label="验证码" prop="code">
+          <Verify @success="codeCheck(true)" @error="codeCheck(false)" :type="3" :vOffset="5" :barSize="{width: '100%', height: '40px'}"></Verify>
         </el-form-item>
       </el-form>
       <div class="login-btn">
         <el-button type="primary" class="login-btn" :loading="loading" @click="goResgister">点击注册</el-button>
         <div class="link-text-bg">
-          <router-link to="/login" class="link-text">去注册</router-link>
+          <router-link to="/login" class="link-text">去登录</router-link>
         </div>
       </div>
     </div>
@@ -21,64 +27,98 @@
 </template>
 
 <script>
-export default {
-  name: "register",
-  data () {
-    let checkUser = (rule, value, callback) => {
-      if (this.entity.user === '') {
-        callback(new Error('请输入用户名'))
-      } else if (!(/^[a-zA-Z0-9\s]+$/.test(this.entity.user))) {
-        callback(new Error('用户名格式不正确'))
-      } else if (this.entity.user.length < 3 || this.entity.user.length > 16) {
-        callback(new Error('用户名格式不正确，长度位3-16位'))
-      } else {
-        callback()
-      }
-    }
+  import Verify from 'vue2-verify'
 
-    let checkPsd = (rule, value, callback) => {
-      if (this.entity.user === '') {
-        callback(new Error('请输入密码'))
-      } else if (!(/^[a-zA-Z0-9\s]+$/.test(this.entity.user))) {
-        callback(new Error('密码格式不正确'))
-      } else if (this.entity.user.length < 3 || this.entity.user.length > 9) {
-        callback(new Error('密码格式不正确，长度位3-9位'))
-      } else {
-        callback()
-      }
-    }
-    return {
-      loading: false,
-      entity: {
-        user: '',
-        psd: ''
-      },
-      rules: {
-        user: [
-          {required: true, validator: checkUser, trigger: 'blur'}
-        ],
-        psd: [
-          {required: true, validator: checkPsd, trigger: 'blur'}
-        ]
-      }
-    }
-  },
-  beforeMount () {
-  },
-  methods: {
-    goResgister () {
-      let self = this
-      this.$refs['resgister-form'].validate((valid) => {
-        if (valid) {
-          self.loading = true
-          // let formData = new FormData()
-          // formData.append('email', self.entity.email)
-          console.log()
+  export default {
+    name: 'register',
+    components: {
+      Verify
+    },
+    data () {
+      let checkUser = (rule, value, callback) => {
+        if (this.entity.user === '') {
+          callback(new Error('请输入用户名'))
+        } else if (!(/^[a-zA-Z0-9\s]+$/.test(this.entity.user))) {
+          callback(new Error('用户名格式不正确'))
+        } else if (this.entity.user.length < 3 || this.entity.user.length > 16) {
+          callback(new Error('用户名格式不正确，长度位3-16位'))
+        } else {
+          callback()
         }
-      })
+      }
+
+      let checkPsd = (rule, value, callback) => {
+        if (this.entity.psd === '') {
+          callback(new Error('请输入密码'))
+        } else if (!(/^[a-zA-Z0-9\s]+$/.test(this.entity.psd))) {
+          callback(new Error('密码格式不正确'))
+        } else if (this.entity.psd.length < 3 || this.entity.psd.length > 9) {
+          callback(new Error('密码格式不正确，长度位3-9位'))
+        } else {
+          callback()
+        }
+      }
+
+      let checkPsd2 = (rule, value, callback) => {
+        if (this.entity.psd === '') {
+          callback(new Error('请确认密码'))
+        } else if (this.entity.psd !== this.entity.psd2) {
+          callback(new Error('两次输入的密码不相同，请确认密码！'))
+        } else {
+          callback()
+        }
+      }
+
+      let checkCode = (rule, value, callback) => {
+        if (this.code === true) {
+          callback()
+        } else {
+          callback(new Error('请向右滑动完成验证'))
+        }
+      }
+      return {
+        loading: false,
+        entity: {
+          user: '',
+          psd: '',
+          psd2: ''
+        },
+        code: false,
+        rules: {
+          user: [
+            {required: true, validator: checkUser, trigger: 'blur'}
+          ],
+          psd: [
+            {required: true, validator: checkPsd, trigger: 'blur'}
+          ],
+          psd2: [
+            {required: true, validator: checkPsd2, trigger: 'blur'}
+          ],
+          code: [
+            {required: true, validator: checkCode, trigger: 'change'}
+          ]
+        }
+      }
+    },
+    beforeMount () {
+    },
+    methods: {
+      goResgister () {
+        let self = this
+        this.$refs['resgister-form'].validate((valid) => {
+          if (valid) {
+            self.loading = true
+            // let formData = new FormData()
+            // formData.append('email', self.entity.email)
+            console.log()
+          }
+        })
+      },
+      codeCheck (success) {
+        this.code = success
+      }
     }
   }
-}
 </script>
 
 <style lang="scss" scoped>
@@ -114,6 +154,12 @@ export default {
           color: #409EFF;
         }
       }
+    }
+  }
+
+  /deep/ .el-form-item__content {
+    .verify-btn {
+      display: none;
     }
   }
 }
