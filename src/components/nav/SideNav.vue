@@ -5,15 +5,15 @@
         <i class="fa fa-plus"></i>
         <span>New chat</span>
       </div>
-      <el-select v-model="value" class="chat-select" placeholder="请选择">
-        <el-option
-            v-for="item in questionList"
-            :key="item.id"
-            :label="item.question"
-            :value="item.question"
-        >
-        </el-option>
-      </el-select>
+<!--      <el-select v-model="value" class="chat-select" placeholder="请选择">-->
+<!--        <el-option-->
+<!--          v-for="item in questionList"-->
+<!--          :key="item.id"-->
+<!--          :label="item.question"-->
+<!--          :value="item.question"-->
+<!--        >-->
+<!--        </el-option>-->
+<!--      </el-select>-->
       <template v-for="(v, k) in questionList">
         <div class="side-list-item lll-flex lll-align-items-center" :key="k" :class="index === k ? 'active' : ''">
           <div class="item-main lll-flex lll-align-items-center" @click="selectQuestion(k)">
@@ -44,67 +44,67 @@
 </template>
 
 <script>
-import Utils from '@/util/utils'
-import Api from '@/api/api'
+  import Utils from '@/util/utils'
+  import Api from '@/api/api'
 
-export default {
-  name: 'side-nav',
-  data () {
-    return {
-      questionList: [],
-      index: null,
-      nameIndex: null,
-      newName: '',
-      value: ''
-    }
-  },
-  beforeMount () {
-    this.utils = Utils
-    this.getQuestionList()
-    this.$store.state.user.name = 'user Name'
-    this.$store.state.user.times = 900
-    this.debounceAddQuestion = this.utils.debounce(this.addQuestion, 200)
-  },
-  methods: {
-    getQuestionList () {
-      this.questionList = []
-      // this.questionList = [{
-      //   id: 1,
-      //   question: '机器人学习时间'
-      // }, {
-      //   id: 2,
-      //   question: 'newChat'
-      // }]
-    },
-    selectQuestion (k) {
-      this.index = k
-      this.value = this.questionList[k].question
-      this.$store.commit('setQuestionId', this.questionList[k].id)
-    },
-    addQuestion () {
-      // this.questionList.push({
-      //   question: 'newChat'
-      // })
-    },
-    editQuestion (k, question) {
-      this.nameIndex = k
-      this.newName = question
-    },
-    changeQuestion (k) {
-      if (this.newName === '' || this.newName === this.questionList[k].question) {
-        this.newName === ''
-        this.nameIndex = null
-      } else {
-        // 修改名字
-        this.getQuestionList()
-        this.nameIndex = null
+  export default {
+    name: 'side-nav',
+    data () {
+      return {
+        questionList: [],
+        index: null,
+        nameIndex: null,
+        newName: '',
+        value: ''
       }
     },
-    deleteQuestion (id) {
-      console.log('deleteQuestion', id)
+    beforeMount () {
+      this.utils = Utils
+      this.getQuestionList()
+      this.$store.state.user.name = 'user Name'
+      this.$store.state.user.times = 900
+      this.debounceAddQuestion = this.utils.debounce(this.addQuestion, 200)
+    },
+    methods: {
+      getQuestionList () {
+        this.questionList = []
+        // this.questionList = [{
+        //   id: 1,
+        //   question: '机器人学习时间'
+        // }, {
+        //   id: 2,
+        //   question: 'newChat'
+        // }]
+      },
+      selectQuestion (k) {
+        this.index = k
+        this.value = this.questionList[k].question
+        this.$store.commit('setQuestionId', this.questionList[k].id)
+      },
+      addQuestion () {
+        // this.questionList.push({
+        //   question: 'newChat'
+        // })
+      },
+      editQuestion (k, question) {
+        this.nameIndex = k
+        this.newName = question
+      },
+      changeQuestion (k) {
+        if (this.newName === '' || this.newName === this.questionList[k].question) {
+          this.newName === ''
+          this.nameIndex = null
+        } else {
+          // 修改名字
+          this.getQuestionList()
+          this.nameIndex = null
+        }
+      },
+      deleteQuestion (id) {
+        console.log('deleteQuestion', id)
+      }
     }
   }
-}
 </script>
 <style lang="scss" scoped>
 .side-nav {
