@@ -2,13 +2,14 @@ import axios from '../http'
 import store from '@/store'
 import utils from '@/util/utils'
 import router from '@/router/router'
+import Qs from 'qs'
 
 /**
  * @param userInfoObject user info
  * @param loginToken sso token
  * @param special if enter via special way
  */
-function login(userInfoObject, loginToken, special) {
+function login (userInfoObject, loginToken, special) {
   sessionStorage.removeItem('store')
   sessionStorage.setItem('login-token', loginToken)
   sessionStorage.setItem('logged', 'true')
@@ -28,10 +29,20 @@ function login(userInfoObject, loginToken, special) {
 }
 
 export default {
-  doLogin() {
+  register (params, callback, errorCallback) {
+    let self = this
+    axios.post(`${process.env.CUSTOM_CONFIG.API_BASE_URL}/register`, Qs.stringify(params), {
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+    }).then(function (response) {
+      self.dealResponse(response, callback, errorCallback)
+    }).catch((data) => {
+      self.dealResponse(null, callback, errorCallback)
+    })
+  },
+  doLogin () {
     // 登录接口
   },
-  doLogout(url) {
+  doLogout (url) {
     sessionStorage.removeItem('login-token')
     sessionStorage.removeItem('logged')
     sessionStorage.removeItem('store')
@@ -39,7 +50,7 @@ export default {
     // 请求接口
     router.push('/login')
   },
-  loginByToken(loginToken, callback, errorCallback) {
+  loginByToken (loginToken, callback, errorCallback) {
     axios.get(process.env.CUSTOM_CONFIG.API_BASE_URL + '/login/token/' + loginToken + '?_v=' + parseInt(new Date().getTime() / 1000)).then(function (response) {
       if (response.data.success === true) {
         login(response.data, loginToken)

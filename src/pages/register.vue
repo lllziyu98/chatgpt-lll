@@ -6,6 +6,9 @@
         <el-form-item label="用户名" prop="user">
           <el-input v-model.trim="entity.user" placeholder="请输入用户名"></el-input>
         </el-form-item>
+        <el-form-item label="Email" prop="email">
+          <el-input v-model.trim="entity.email" placeholder="请输入Email"></el-input>
+        </el-form-item>
         <el-form-item label="密码" prop="psd">
           <el-input type="password" v-model.trim="entity.psd" placeholder="请输入密码"></el-input>
         </el-form-item>
@@ -17,7 +20,7 @@
         </el-form-item>
       </el-form>
       <div class="login-btn">
-        <el-button type="primary" class="login-btn" :loading="loading" @click="goResgister">点击注册</el-button>
+        <el-button type="primary" class="login-btn" :loading="loading" @click="goRegister">点击注册</el-button>
         <div class="link-text-bg">
           <router-link to="/login" class="link-text">去登录</router-link>
         </div>
@@ -28,6 +31,7 @@
 
 <script>
   import Verify from 'vue2-verify'
+  import Api from '@/api/api'
 
   export default {
     name: 'register',
@@ -42,6 +46,17 @@
           callback(new Error('用户名格式不正确'))
         } else if (this.entity.user.length < 3 || this.entity.user.length > 16) {
           callback(new Error('用户名格式不正确，长度位3-16位'))
+        } else {
+          callback()
+        }
+      }
+
+      let checkEmail = (rule, value, callback) => {
+        let regx = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        if (this.entity.email === '') {
+          callback(new Error('请输入Email'))
+        } else if (!regx.test(value)) {
+          callback(new Error('Email格式不正确'))
         } else {
           callback()
         }
@@ -80,6 +95,7 @@
         loading: false,
         entity: {
           user: '',
+          email: '',
           psd: '',
           psd2: ''
         },
@@ -87,6 +103,9 @@
         rules: {
           user: [
             {required: true, validator: checkUser, trigger: 'blur'}
+          ],
+          email: [
+            {required: true, validator: checkEmail, trigger: 'blur'}
           ],
           psd: [
             {required: true, validator: checkPsd, trigger: 'blur'}
@@ -103,14 +122,30 @@
     beforeMount () {
     },
     methods: {
-      goResgister () {
+      goRegister () {
         let self = this
         this.$refs['resgister-form'].validate((valid) => {
           if (valid) {
             self.loading = true
-            // let formData = new FormData()
-            // formData.append('email', self.entity.email)
-            console.log()
+            let params = {
+              username: self.entity.user,
+              email: self.entity.email,
+              password: self.entity.psd
+            }
+            Api.register(params, (data) => {
+              self.loading = false
+              self.$message({
+                message: '注册成功',
+                type: 'success'
+              })
+              self.$router.push('/login')
+            }, () => {
+              self.loading = false
+              self.$message({
+                message: '注册失败',
+                type: 'error'
+              })
+            })
           }
         })
       },

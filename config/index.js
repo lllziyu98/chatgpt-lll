@@ -9,11 +9,11 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/chat': {
-        target: 'http://192.9.224.130:9939',  //目标接口域名
+      '/': {
+        target: 'http://192.9.224.130:23856',  //目标接口域名
         changeOrigin: true,  //是否跨域
         pathRewrite: {
-          '^/chat': '/chat'   //重写接口
+          '^/': '/'   //重写接口
         }
       }
     },
