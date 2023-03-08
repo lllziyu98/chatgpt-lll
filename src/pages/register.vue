@@ -32,6 +32,7 @@
 <script>
   import Verify from 'vue2-verify'
   import Api from '@/api/api'
+  import utils from '@/util/utils'
 
   export default {
     name: 'register',
@@ -120,13 +121,14 @@
       }
     },
     beforeMount () {
+      this.utils = utils
       this.checkLogin()
     },
     methods: {
       checkLogin () {
         let self = this
         Api.checkLogin((data) => {
-          self.$store.commit('setUser', {name: data.data.slice(8), role: '0', times: '---'})
+          self.$store.commit('setUser', {name: data.data.slice(8), role: '0', times: '---', token: self.utils.getCookie('token')})
           self.$router.push('/index')
         }, (error) => {
           self.$store.commit('setUser', {})

@@ -91,7 +91,8 @@
           message: self.question,
           conversationId: self.conversationId,
           parentMessageId: self.messageId,
-          stream: true
+          stream: true,
+          token: self.$store.state.user.token
         }
         if (self.replyObj === null) {
           self.replyObj = {

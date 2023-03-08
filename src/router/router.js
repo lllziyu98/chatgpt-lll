@@ -6,6 +6,7 @@ import Login from './modules/login'
 import Register from './modules/register'
 import Person from './modules/person'
 import store from '../store/index'
+import utils from '../util/utils'
 
 Vue.use(Router)
 
@@ -43,7 +44,7 @@ router.beforeEach((to, from, next) => {
   } else {
     // activeInterval()
     api.checkLogin((data) => {
-      store.commit('setUser', {name: data.data.slice(8), role: '0', times: '---'})
+      store.commit('setUser', {name: data.data.slice(8), role: '0', times: '---', token: utils.getCookie('token')})
       next()
     }, (error) => {
       store.commit('setUser', {})

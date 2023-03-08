@@ -1,8 +1,8 @@
 export default {
-  getUrlKey(name) {
+  getUrlKey (name) {
     return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.href) || ['', ''])[1].replace(/\+/g, '%20')) || null
   },
-  openUrlInNewTab(url) {
+  openUrlInNewTab (url) {
     let tag = document.createElement('a')
     tag.href = url
     tag.target = '_blank'
@@ -10,7 +10,7 @@ export default {
     event.initEvent('click', true, true)
     tag.dispatchEvent(event)
   },
-  debounce(fn, wait) {
+  debounce (fn, wait) {
     let timeout
     return function () {
       let self = this
@@ -21,7 +21,7 @@ export default {
       }, wait)
     }
   },
-  clone(source, n) {
+  clone (source, n) {
     let target
     if (source === null || typeof source !== 'object') {
       target = source
@@ -43,5 +43,12 @@ export default {
       console.warn("Unable to copy obj! Its type isn't supported.")
     }
     return target
+  },
+  getCookie (name) {
+    let a = document.cookie.split('; ')
+    for (let i = 0; i < a.length; i++) {
+      let temp = a[i].split('=')
+      if (temp[0] === name) return unescape(temp[1])
+    }
   }
 }
