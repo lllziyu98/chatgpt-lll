@@ -14,7 +14,7 @@ export default {
       }
     } else {
       if (errorCallback && typeof errorCallback === 'function') {
-        errorCallback()
+        errorCallback(response)
       }
     }
   }

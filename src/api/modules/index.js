@@ -45,14 +45,17 @@ export default {
         self.dealResponse(response, callback, errorCallback)
       }
       if (res.event === 'error') {
-        self.dealResponse(null, callback, errorCallback)
+        let response = res.data === '次数已经用完了' ? {
+          code: '1001'
+        } : null
+        self.dealResponse(response, callback, errorCallback)
       }
     }
     ws.onclose = (evt) => {
-      console.log('关闭')
+      console.log('关闭', evt)
     }
     ws.onerror = (evt) => {
-      console.log('错误')
+      console.log('错误', evt)
       self.dealResponse(null, callback, errorCallback)
     }
   }
