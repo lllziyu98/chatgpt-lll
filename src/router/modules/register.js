@@ -5,6 +5,7 @@ export default [{
   name: 'register',
   component: Register,
   meta: {
-    full: true
+    full: true,
+    noLogin: true
   }
 }]

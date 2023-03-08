@@ -120,8 +120,19 @@
       }
     },
     beforeMount () {
+      this.checkLogin()
     },
     methods: {
+      checkLogin () {
+        let self = this
+        Api.checkLogin((data) => {
+          self.$store.commit('setUser', {name: data.data.slice(8), role: '0', times: '---'})
+          self.$router.push('/index')
+        }, (error) => {
+          self.$store.commit('setUser', {})
+          console.log('checkLogin-error', error)
+        })
+      },
       goRegister () {
         let self = this
         this.$refs['resgister-form'].validate((valid) => {

@@ -74,7 +74,6 @@
     },
     beforeMount () {
       this.utils = Utils
-    // this.getReply()
     },
     methods: {
       getReply () {

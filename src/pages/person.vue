@@ -1,6 +1,6 @@
 <template>
   <div class="chat-person">
-    <h1 class="person-title">ChatGPT</h1>
+    <h1 class="person-title" @click="goIndex">ChatGPT</h1>
     <div class="person-main">
       <div class="person-top lll-flex lll-justify-content-between lll-align-items-center">
         <img src="../../static/image/my.png">
@@ -17,7 +17,7 @@
           {{ $store.state.user.times }}
         </el-form-item>
         <el-form-item label="联系客服">
-          vxx: 123321321321321
+          ---
         </el-form-item>
       </el-form>
     </div>
@@ -25,38 +25,42 @@
 </template>
 
 <script>
-export default {
-  name: "person",
-  data () {
-    let checkPsd = (rule, value, callback) => {
-      if (this.entity.user === '') {
-        callback(new Error('请输入密码'))
-      } else if (!(/^[a-zA-Z0-9\s]+$/.test(this.entity.user))) {
-        callback(new Error('密码格式不正确'))
-      } else if (this.entity.user.length < 3 || this.entity.user.length > 9) {
-        callback(new Error('密码格式不正确，长度位3-9位'))
-      } else {
-        callback()
+  export default {
+    name: 'person',
+    data () {
+      let checkPsd = (rule, value, callback) => {
+        if (this.entity.user === '') {
+          callback(new Error('请输入密码'))
+        } else if (!(/^[a-zA-Z0-9\s]+$/.test(this.entity.user))) {
+          callback(new Error('密码格式不正确'))
+        } else if (this.entity.user.length < 3 || this.entity.user.length > 9) {
+          callback(new Error('密码格式不正确，长度位3-9位'))
+        } else {
+          callback()
+        }
       }
-    }
 
-    return {
-      loading: false,
-      entity: {
-        psd: ''
-      },
-      changePsd: false,
-      rules: {
-        psd: [
-          {required: true, validator: checkPsd, trigger: 'blur'}
-        ]
+      return {
+        loading: false,
+        entity: {
+          psd: ''
+        },
+        changePsd: false,
+        rules: {
+          psd: [
+            {required: true, validator: checkPsd, trigger: 'blur'}
+          ]
+        }
+      }
+    },
+    beforeMount () {
+    },
+    methods: {
+      goIndex() {
+        this.$router.push('/index')
       }
     }
-  },
-  beforeMount () {
-  },
-  methods: {}
-}
+  }
 </script>
 
 <style lang="scss" scoped>
@@ -70,6 +74,7 @@ export default {
     font-weight: 600;
     line-height: 1.2;
     color: #ffffff;
+    cursor: pointer;
   }
 
   .person-main {

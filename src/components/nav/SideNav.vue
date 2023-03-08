@@ -28,7 +28,7 @@
     </div>
     <div class="side-set-list">
       <div class="side-list-item lll-flex lll-align-items-center">
-        <div class="item-main lll-flex lll-align-items-center">
+        <div class="item-main lll-flex lll-align-items-center" @click="goPerson">
           <i class="fa fa-user-o"></i>
           <span>{{ $store.state.user.name }}</span>
         </div>
@@ -61,8 +61,6 @@
     beforeMount () {
       this.utils = Utils
       this.getQuestionList()
-      this.$store.state.user.name = 'user Name'
-      this.$store.state.user.times = 900
       this.debounceAddQuestion = this.utils.debounce(this.addQuestion, 200)
     },
     methods: {
@@ -102,6 +100,9 @@
       },
       deleteQuestion (id) {
         console.log('deleteQuestion', id)
+      },
+      goPerson () {
+        this.$router.push('/person')
       }
     }
   }

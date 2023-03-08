@@ -5,6 +5,7 @@ export default [{
   name: 'login',
   component: Login,
   meta: {
-    full: true
+    full: true,
+    noLogin: true
   }
 }]

@@ -22,6 +22,7 @@
 
 <script>
   import Api from '@/api/api'
+  import store from '../store'
 
   export default {
     name: 'login',
@@ -67,8 +68,19 @@
       }
     },
     beforeMount () {
+      this.checkLogin()
     },
     methods: {
+      checkLogin () {
+        let self = this
+        Api.checkLogin((data) => {
+          self.$store.commit('setUser', {name: data.data.slice(8), role: '0', times: '---'})
+          self.$router.push('/index')
+        }, (error) => {
+          self.$store.commit('setUser', {})
+          console.log('checkLogin-error', error)
+        })
+      },
       goLogin () {
         let self = this
         this.$refs['login-form'].validate((valid) => {
@@ -80,6 +92,7 @@
             }
             Api.login(params, (data) => {
               self.loading = false
+              self.$store.commit('setUser', {name: self.entity.user, role: '0', times: '---'})
               self.$message({
                 message: '登录成功',
                 type: 'success'
